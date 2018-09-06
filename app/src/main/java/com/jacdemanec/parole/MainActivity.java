@@ -102,17 +102,27 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
         });
     }
 
+    // Initialize RecyclerView and its adapter
     private void initializeRecyclerView() {
+
         Query query = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("timestamp");
         FirebaseRecyclerOptions<Hashtag> options =
                 new FirebaseRecyclerOptions.Builder<Hashtag>()
                         .setQuery(query, Hashtag.class)
                         .build();
 
-        // Initialize RecyclerView and its adapter
+        /* FAVORITES QUERY!!!!!!!!
+        Query query = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("favorites/"+mUsername).equalTo(true);
+        FirebaseRecyclerOptions<Hashtag> options =
+                new FirebaseRecyclerOptions.Builder<Hashtag>()
+                        .setQuery(query, Hashtag.class)
+                        .build();
+        */
         mHashtagAdapter = new HashtagAdapter(options, this, mUsername);
         mHashtagRecyclerView.setAdapter(mHashtagAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
         mHashtagRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
@@ -225,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
         HashMap<String, Boolean> emptyFavoritesMap = new HashMap<>();
         Hashtag testHashtag = new Hashtag(hashtag, text, "@" + mUsername, emptyLikesMap, 0, emptyFavoritesMap, 0, 0);
         mHashtagDbReference.child(hashtag).setValue(testHashtag);
+        mHashtagRecyclerView.smoothScrollToPosition(mHashtagAdapter.getItemCount());
     }
 
 }
