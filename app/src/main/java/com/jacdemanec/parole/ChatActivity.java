@@ -40,7 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private ImageButton mPhotoPickerButton;
     private EditText mMessageEditText;
-    private Button mSendButton;
+    private ImageButton mSendButton;
 
     private String mUsername;
     private String mHashtag;
@@ -71,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessageRecyclerView =  findViewById(R.id.messageListView);
         mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
         mMessageEditText = (EditText) findViewById(R.id.messageEditText);
-        mSendButton = (Button) findViewById(R.id.sendButton);
+        mSendButton =  findViewById(R.id.sendButton);
 
 
         Query query = mFirebaseDatabase.getReference().child("messages").orderByChild("hashtag").equalTo(mHashtag);
