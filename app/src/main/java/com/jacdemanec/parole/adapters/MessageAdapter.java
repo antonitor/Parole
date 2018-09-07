@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,9 +25,11 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, Message
     protected void onBindViewHolder(@NonNull MessageHolder holder, int position, @NonNull ChatMessage message) {
 
         holder.authorTextView.setVisibility(View.VISIBLE);
+        //holder.container.setBackgroundResource(R.drawable.user_message_box);
         if (position > 0) {
             if (getItem(position).getName().equals(getItem(position - 1).getName())) {
                 holder.authorTextView.setVisibility(View.GONE);
+                //holder.container.setBackgroundResource(R.drawable.message_box);
             }
         }
         boolean isPhoto = message.getPhotoUrl() != null;
@@ -58,12 +61,14 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, Message
         ImageView photoImageView;
         TextView messageTextView;
         TextView authorTextView;
+        LinearLayout container;
 
         public MessageHolder(View itemView) {
             super(itemView);
             photoImageView = itemView.findViewById(R.id.photoImageView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
             authorTextView = itemView.findViewById(R.id.nameTextView);
+            container = (LinearLayout) itemView;
         }
     }
 

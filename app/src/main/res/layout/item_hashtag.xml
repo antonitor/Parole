@@ -107,7 +107,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="72dp"
-        android:background="#9e9e9e"
+        android:background="@color/borderPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.49"

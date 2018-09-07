@@ -29,6 +29,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.jacdemanec.parole.adapters.HashtagAdapter;
 import com.jacdemanec.parole.model.Hashtag;
+import com.vanniktech.emoji.EmojiManager;
+import com.vanniktech.emoji.google.GoogleEmojiProvider;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
         setContentView(R.layout.activity_main);
 
         mUsername = ANONYMOUS;
-
+        EmojiManager.install(new GoogleEmojiProvider());
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
 

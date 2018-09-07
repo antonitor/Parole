@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -27,6 +28,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.jacdemanec.parole.adapters.MessageAdapter;
 import com.jacdemanec.parole.model.ChatMessage;
+import com.vanniktech.emoji.EmojiEditText;
+import com.vanniktech.emoji.EmojiManager;
+import com.vanniktech.emoji.EmojiPopup;
+import com.vanniktech.emoji.google.GoogleEmojiProvider;
+
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
@@ -39,8 +45,10 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter mMessageAdapter;
     private ProgressBar mProgressBar;
     private ImageButton mPhotoPickerButton;
-    private EditText mMessageEditText;
+    private EmojiEditText mMessageEditText;
     private ImageButton mSendButton;
+    private EmojiPopup mEmojiPopup;
+    private ImageButton mEmojiButton;
 
     private String mUsername;
     private String mHashtag;
@@ -68,10 +76,13 @@ public class ChatActivity extends AppCompatActivity {
 
         // Initialize references to views
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mMessageRecyclerView =  findViewById(R.id.messageListView);
-        mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
-        mMessageEditText = (EditText) findViewById(R.id.messageEditText);
-        mSendButton =  findViewById(R.id.sendButton);
+        mMessageRecyclerView = findViewById(R.id.messageListView);
+        //mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
+        mSendButton = findViewById(R.id.sendButton);
+        mEmojiButton = findViewById(R.id.emoji_picker);
+        RelativeLayout rootView = findViewById(R.id.root_view);
+        mMessageEditText = findViewById(R.id.messageEditText);
+        mEmojiPopup = EmojiPopup.Builder.fromRootView(rootView).build(mMessageEditText);
 
 
         Query query = mFirebaseDatabase.getReference().child("messages").orderByChild("hashtag").equalTo(mHashtag);
@@ -89,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-
+/*
         // ImagePickerButton shows an image picker to upload a image for a message
         mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
                 intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
             }
-        });
+        });*/
 
         // Enable Send button when there's text to send
         mMessageEditText.addTextChangedListener(new TextWatcher() {
@@ -134,6 +145,15 @@ public class ChatActivity extends AppCompatActivity {
                 mMessageRecyclerView.smoothScrollToPosition(mMessageAdapter.getItemCount());
             }
         });
+        mEmojiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEmojiPopup.toggle();
+            }
+        });
+
+
+
 
     }
 
@@ -149,7 +169,7 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Task<Uri> urlTask = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                            while (!urlTask.isSuccessful());
+                            while (!urlTask.isSuccessful()) ;
                             Uri downloadUrl = urlTask.getResult();
                             ChatMessage friendlyMessage = new ChatMessage(null, mUsername, downloadUrl.toString(), mHashtag);
                             mMessageDbReference.push().setValue(friendlyMessage);
@@ -171,4 +191,13 @@ public class ChatActivity extends AppCompatActivity {
         super.onStop();
         mMessageAdapter.stopListening();
     }
+
+/*
+    @Override
+    public void onSendClicked() {
+        ChatMessage message = new ChatMessage(mBottomPanel.getText(), mUsername, null, mHashtag);
+        mMessageDbReference.push().setValue(message);
+        mBottomPanel.setText("");
+        mMessageRecyclerView.smoothScrollToPosition(mMessageAdapter.getItemCount());
+    }*/
 }
