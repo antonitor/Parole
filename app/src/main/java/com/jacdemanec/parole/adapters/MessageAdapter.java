@@ -25,11 +25,11 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, Message
     protected void onBindViewHolder(@NonNull MessageHolder holder, int position, @NonNull ChatMessage message) {
 
         holder.authorTextView.setVisibility(View.VISIBLE);
-        //holder.container.setBackgroundResource(R.drawable.user_message_box);
+        holder.view.setBackgroundResource(R.drawable.triangle_chat_box);
         if (position > 0) {
             if (getItem(position).getName().equals(getItem(position - 1).getName())) {
                 holder.authorTextView.setVisibility(View.GONE);
-                //holder.container.setBackgroundResource(R.drawable.message_box);
+                holder.view.setBackgroundResource(R.drawable.round_chat_box);
             }
         }
         boolean isPhoto = message.getPhotoUrl() != null;
@@ -61,14 +61,14 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, Message
         ImageView photoImageView;
         TextView messageTextView;
         TextView authorTextView;
-        LinearLayout container;
+        View view;
 
         public MessageHolder(View itemView) {
             super(itemView);
             photoImageView = itemView.findViewById(R.id.photoImageView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
             authorTextView = itemView.findViewById(R.id.nameTextView);
-            container = (LinearLayout) itemView;
+            view = itemView.findViewById(R.id.view);
         }
     }
 
