@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="16dp"
     android:layout_marginStart="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="4dp">
+    android:layout_marginTop="8dp">
 
     <View
         android:id="@+id/view"
@@ -26,7 +26,6 @@
         android:paddingEnd="16dp"
         android:paddingStart="0dp"
         android:paddingTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/view"
         app:layout_constraintTop_toTopOf="parent">
 
