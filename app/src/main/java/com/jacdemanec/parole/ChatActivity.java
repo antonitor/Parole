@@ -1,7 +1,9 @@
 package com.jacdemanec.parole;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.firebase.ui.auth.ui.phone.CountryListSpinner;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +36,10 @@ import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.google.GoogleEmojiProvider;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Date;
+import java.util.UUID;
+
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
@@ -40,6 +47,7 @@ public class ChatActivity extends AppCompatActivity {
     public static final String ANONYMOUS = "anonymous";
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 160;
     private static final int RC_PHOTO_PICKER = 2;
+    private static final int RC_CAMERA_ACTION = 3;
 
     private RecyclerView mMessageRecyclerView;
     private FirebaseRecyclerAdapter mMessageAdapter;
@@ -58,6 +66,10 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mChatPhotosStorageReference;
 
+    private View.OnClickListener mSendMessageClickListener;
+    private View.OnClickListener mSendPictureClickListener;
+    private View.OnClickListener mTakePhotoClickListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,9 +87,9 @@ public class ChatActivity extends AppCompatActivity {
         mChatPhotosStorageReference = mFirebaseStorage.getReference("chat_photos");
 
         // Initialize references to views
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar =  findViewById(R.id.progressBar);
         mMessageRecyclerView = findViewById(R.id.messageListView);
-        //mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
+        mPhotoPickerButton =  findViewById(R.id.photoPickerButton);
         mSendButton = findViewById(R.id.sendButton);
         mEmojiButton = findViewById(R.id.emoji_picker);
         RelativeLayout rootView = findViewById(R.id.root_view);
@@ -100,41 +112,8 @@ public class ChatActivity extends AppCompatActivity {
 
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-/*
-        // ImagePickerButton shows an image picker to upload a image for a message
-        mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/jpeg");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
-            }
-        });*/
 
-        // Enable Send button when there's text to send
-        mMessageEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() > 0) {
-                    mSendButton.setEnabled(true);
-                } else {
-                    mSendButton.setEnabled(false);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-        mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
-
-        // Send button sends a message and clears the EditText
-        mSendButton.setOnClickListener(new View.OnClickListener() {
+        mSendMessageClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String trimedMessage = mMessageEditText.getText().toString().replaceFirst("\\s+$", "").replaceFirst("^\\s+", "");
@@ -144,17 +123,60 @@ public class ChatActivity extends AppCompatActivity {
                 mMessageEditText.setText("");
                 mMessageRecyclerView.smoothScrollToPosition(mMessageAdapter.getItemCount());
             }
+        };
+
+        mSendPictureClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
+            }
+        };
+
+        mTakePhotoClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, RC_CAMERA_ACTION);
+                }
+            }
+        };
+        mPhotoPickerButton.setOnClickListener(mSendPictureClickListener);
+        mSendButton.setOnClickListener(mTakePhotoClickListener);
+        // Enable Send button when there's text to send
+        mMessageEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().length() > 0) {
+                    mSendButton.setImageResource(R.drawable.ic_send_white_24dp);
+                    mSendButton.setOnClickListener(mSendMessageClickListener);
+                    mPhotoPickerButton.setVisibility(View.INVISIBLE);
+                } else {
+                    mSendButton.setImageResource(R.drawable.ic_camera_grey_24dp);
+                    mSendButton.setOnClickListener(mTakePhotoClickListener);
+                    mPhotoPickerButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
         });
+        mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
+
         mEmojiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mEmojiPopup.toggle();
             }
         });
-
-
-
-
     }
 
     @Override
@@ -176,6 +198,29 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
                 }
+                break;
+            case RC_CAMERA_ACTION:
+                if (resultCode == RESULT_OK)  {
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    final String randomPhotoName = "photo-" + (new Date().getTime());
+                    final StorageReference photoRef = mChatPhotosStorageReference.child(randomPhotoName+".jpg");
+                    byte[] byteData = baos.toByteArray();
+                    UploadTask uploadTask = photoRef.putBytes(byteData);
+                    uploadTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri> urlTask = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            while (!urlTask.isSuccessful()) ;
+                            Uri downloadUrl = urlTask.getResult();
+                            ChatMessage friendlyMessage = new ChatMessage(null, mUsername, downloadUrl.toString(), mHashtag);
+                            mMessageDbReference.push().setValue(friendlyMessage);
+                        }
+                    });
+
+                }
         }
     }
 
@@ -191,13 +236,4 @@ public class ChatActivity extends AppCompatActivity {
         super.onStop();
         mMessageAdapter.stopListening();
     }
-
-/*
-    @Override
-    public void onSendClicked() {
-        ChatMessage message = new ChatMessage(mBottomPanel.getText(), mUsername, null, mHashtag);
-        mMessageDbReference.push().setValue(message);
-        mBottomPanel.setText("");
-        mMessageRecyclerView.smoothScrollToPosition(mMessageAdapter.getItemCount());
-    }*/
 }
