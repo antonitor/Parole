@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
     @Override
     protected void onStop() {
         super.onStop();
+        if (mHashtagAdapter != null)
         mHashtagAdapter.stopListening();
     }
 
