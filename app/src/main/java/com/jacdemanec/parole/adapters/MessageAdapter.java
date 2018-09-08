@@ -1,5 +1,6 @@
 package com.jacdemanec.parole.adapters;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.jacdemanec.parole.ChatActivity;
+import com.jacdemanec.parole.ImageActvity;
 import com.jacdemanec.parole.model.ChatMessage;
 import com.jacdemanec.parole.R;
 
@@ -22,7 +25,7 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, Message
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MessageHolder holder, int position, @NonNull ChatMessage message) {
+    protected void onBindViewHolder(@NonNull MessageHolder holder, int position, @NonNull final ChatMessage message) {
 
         holder.authorTextView.setVisibility(View.VISIBLE);
         holder.view.setBackgroundResource(R.drawable.triangle_chat_box);
@@ -39,6 +42,14 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, Message
             Glide.with(holder.photoImageView.getContext())
                     .load(message.getPhotoUrl())
                     .into(holder.photoImageView);
+            holder.photoImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), ImageActvity.class);
+                    intent.putExtra(view.getContext().getString(R.string.extra_image), message.getPhotoUrl());
+                    view.getContext().startActivity(intent);
+                }
+            });
         } else {
             holder.messageTextView.setVisibility(View.VISIBLE);
             holder.photoImageView.setVisibility(View.GONE);

@@ -12,13 +12,10 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.firebase.ui.auth.ui.phone.CountryListSpinner;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,13 +29,10 @@ import com.google.firebase.storage.UploadTask;
 import com.jacdemanec.parole.adapters.MessageAdapter;
 import com.jacdemanec.parole.model.ChatMessage;
 import com.vanniktech.emoji.EmojiEditText;
-import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
-import com.vanniktech.emoji.google.GoogleEmojiProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
-import java.util.UUID;
 
 
 public class ChatActivity extends AppCompatActivity {

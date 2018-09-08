@@ -17,6 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChatActivity" />
+        <activity android:name=".ImageActvity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>
