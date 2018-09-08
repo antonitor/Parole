@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="16dp"
-    android:layout_marginStart="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="8dp">
+    android:layout_marginEnd="64dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="4dp"
+    android:orientation="horizontal">
 
     <View
         android:id="@+id/view"
         android:layout_width="12dp"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:background="@drawable/user_message_box"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:elevation="1dp"/>
+        android:elevation="1dp" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/message_box"
         android:elevation="1dp"
@@ -27,9 +26,7 @@
         android:paddingBottom="4dp"
         android:paddingEnd="4dp"
         android:paddingStart="0dp"
-        android:paddingTop="4dp"
-        app:layout_constraintStart_toEndOf="@+id/view"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingTop="4dp">
 
         <TextView
             android:id="@+id/nameTextView"
@@ -71,4 +68,5 @@
             android:textSize="16sp"
             tools:text="Message" />
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

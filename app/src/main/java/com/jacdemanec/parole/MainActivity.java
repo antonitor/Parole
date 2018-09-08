@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
         mFab = findViewById(R.id.fab);
 
         // Initialize progress bar
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
     private void onSingedInInitialize(String username) {
         mUsername = username;
         initializeRecyclerView();
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onStart();
     }
 
