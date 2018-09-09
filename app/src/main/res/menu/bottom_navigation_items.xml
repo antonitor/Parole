@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_hashtags"
+        android:title="Hashtags"
+        android:icon="@drawable/ic_hastag_white" />
+    <item android:id="@+id/action_favorites"
+        android:title="Favorites"
+        android:icon="@drawable/ic_favorite_white_24dp" />
+    <item android:id="@+id/action_profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_account_circle_black_24dp" />
+</menu>

@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
     private FirebaseRecyclerAdapter mHashtagAdapter;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFab;
+    private BottomNavigationView mBottomNavigationView;
 
     private String mUsername;
 
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
         mProgressBar = findViewById(R.id.hashtag_progressbar);
         mHashtagRecyclerView = findViewById(R.id.hashtag_recyclerview);
         mFab = findViewById(R.id.fab);
+        mBottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Initialize progress bar
 
@@ -94,6 +97,24 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
                 }
             }
         };
+
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_hashtags:
+                        break;
+                    case R.id.action_favorites:
+                        Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+                        intent.putExtra("extra_username", mUsername);
+                        startActivity(intent);
+                        break;
+                    case R.id.action_profile:
+                        return false;
+                }
+                return true;
+            }
+        });
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 
     @Override
     protected void onResume() {

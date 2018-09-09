@@ -76,7 +76,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:background="@xml/round_shape"
-            android:elevation="4dp"
+            android:elevation="6dp"
             app:srcCompat="@drawable/ic_camera_grey_24dp" />
 
     </LinearLayout>
