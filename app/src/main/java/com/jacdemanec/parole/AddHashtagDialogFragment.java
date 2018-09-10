@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
@@ -13,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.jacdemanec.parole.adapters.HashtagAdapter;
 
 public class AddHashtagDialogFragment extends DialogFragment {
 

@@ -1,59 +1,45 @@
 package com.jacdemanec.parole;
 
 
-import android.app.SearchManager;
-import android.content.Context;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.jacdemanec.parole.adapters.HashtagAdapter;
+import com.jacdemanec.parole.adapters.MainPageAdapter;
 import com.jacdemanec.parole.model.Hashtag;
+import com.jacdemanec.parole.viewmodel.HashtagViewModel;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.google.GoogleEmojiProvider;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements HashtagAdapter.HashtagOnClickListener
-        ,AddHashtagDialogFragment.AddHasthagListener {
+
+public class MainActivity extends AppCompatActivity implements AddHashtagDialogFragment.AddHasthagListener{
 
     private static final String TAG = "MainActivity";
 
     public static final String ANONYMOUS = "anonymous";
     private static final int RC_SIGN_IN = 1;
 
-    private RecyclerView mHashtagRecyclerView;
-    private FirebaseRecyclerAdapter mHashtagAdapter;
-    private ProgressBar mProgressBar;
-    private FloatingActionButton mFab;
-    private BottomNavigationView mBottomNavigationView;
+    private HashtagViewModel mViewModel;
+    private FragmentPagerAdapter fragmentPagerAdapter;
+    private ViewPager viewPager;
 
-    private String mUsername;
-
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mHashtagDbReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -61,22 +47,17 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mUsername = ANONYMOUS;
         EmojiManager.install(new GoogleEmojiProvider());
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+
+        mViewModel = ViewModelProviders.of(this).get(HashtagViewModel.class);
+
+        viewPager = findViewById(R.id.pager);
+        fragmentPagerAdapter = new MainPageAdapter(getSupportFragmentManager());
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.setAdapter(fragmentPagerAdapter);
         mFirebaseAuth = FirebaseAuth.getInstance();
-
-        mHashtagDbReference = mFirebaseDatabase.getReference().child("hashtags");
-
-        // Initialize references to views
-        mProgressBar = findViewById(R.id.hashtag_progressbar);
-        mHashtagRecyclerView = findViewById(R.id.hashtag_recyclerview);
-        mFab = findViewById(R.id.fab);
-        mBottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // Initialize progress bar
-
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -98,55 +79,6 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
             }
         };
 
-        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_hashtags:
-                        break;
-                    case R.id.action_favorites:
-                        Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
-                        intent.putExtra("extra_username", mUsername);
-                        startActivity(intent);
-                        break;
-                    case R.id.action_profile:
-                        return false;
-                }
-                return true;
-            }
-        });
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment dialogFragment = new AddHashtagDialogFragment();
-                dialogFragment.show(getSupportFragmentManager(), "AddHashtagDialogFragment");
-            }
-        });
-    }
-
-    // Initialize RecyclerView and its adapter
-    private void initializeRecyclerView() {
-
-        Query query = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("timestamp");
-        FirebaseRecyclerOptions<Hashtag> options =
-                new FirebaseRecyclerOptions.Builder<Hashtag>()
-                        .setQuery(query, Hashtag.class)
-                        .build();
-
-        /* FAVORITES QUERY!!!!!!!!
-        Query query = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("favorites/"+mUsername).equalTo(true);
-        FirebaseRecyclerOptions<Hashtag> options =
-                new FirebaseRecyclerOptions.Builder<Hashtag>()
-                        .setQuery(query, Hashtag.class)
-                        .build();
-        */
-        mHashtagAdapter = new HashtagAdapter(options, this, mUsername);
-        mHashtagRecyclerView.setAdapter(mHashtagAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
-        mHashtagRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
 
@@ -179,14 +111,11 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
     }
 
     private void onSingedInInitialize(String username) {
-        mUsername = username;
-        initializeRecyclerView();
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-        onStart();
+        mViewModel.setmUsername(username);
     }
 
     private void onSingedOutCleanup() {
-        mUsername = ANONYMOUS;
+        mViewModel.setmUsername(ANONYMOUS);
     }
 
     @Override
@@ -199,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     @Override
@@ -217,52 +145,11 @@ public class MainActivity extends AppCompatActivity implements HashtagAdapter.Ha
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (mHashtagAdapter != null)
-            mHashtagAdapter.startListening();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mHashtagAdapter != null)
-        mHashtagAdapter.stopListening();
-    }
-
-    @Override
-    public void onHashtagClicked(String hashtag) {
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("EXTRA_USERNAME", mUsername);
-        intent.putExtra("EXTRA_HASHTAG", hashtag);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onLikeClicked(String hashtag) {
-        DatabaseReference likesReference = mHashtagDbReference.child(hashtag);
-        likesReference.child("likes").child(mUsername).setValue(true);
-    }
-
-    @Override
-    public void onFavoriteClicked(String hashtag) {
-        DatabaseReference likesReference = mHashtagDbReference.child(hashtag);
-        likesReference.child("favorites").child(mUsername).setValue(true);
-    }
-
-    @Override
-    public void onUnFavoriteClicked(String hashtag) {
-        DatabaseReference likesReference = mHashtagDbReference.child(hashtag);
-        likesReference.child("favorites").child(mUsername).removeValue();
-    }
-
-    @Override
     public void onDialogPositivieClick(String hashtag, String text) {
         HashMap<String, Boolean> emptyLikesMap = new HashMap<>();
         HashMap<String, Boolean> emptyFavoritesMap = new HashMap<>();
-        Hashtag testHashtag = new Hashtag(hashtag, text, "@" + mUsername, emptyLikesMap, 0, emptyFavoritesMap, 0, 0);
-        mHashtagDbReference.child(hashtag).setValue(testHashtag);
-        mHashtagRecyclerView.smoothScrollToPosition(mHashtagAdapter.getItemCount());
-    }
+        Hashtag hashtagInstance = new Hashtag(hashtag, text, "@" + mViewModel.getmUsername(), emptyLikesMap, 0, emptyFavoritesMap, 0, 0);
+        mViewModel.getmHashtagDbReference().child(hashtag).setValue(hashtagInstance);
 
+    }
 }

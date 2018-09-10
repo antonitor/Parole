@@ -23,7 +23,6 @@
             android:name=".ImageActvity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".FavoriteActivity"></activity>
     </application>
 
 </manifest>

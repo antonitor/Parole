@@ -1,43 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.jacdemanec.parole.MainActivity">
+    tools:context="com.jacdemanec.parole.MainActivity"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/hashtag_recyclerview"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:srcCompat="@drawable/ic_add_black_24dp"
-        android:layout_marginBottom="74dp"
-        android:elevation="6dp"
-        android:layout_marginEnd="16dp" />
+        android:background="@color/colorPrimary"
+        app:tabMode="fixed" />
 
-    <ProgressBar
-        android:id="@+id/hashtag_progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
-
-    <android.support.design.widget.BottomNavigationView
+    <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bottom_navigation"
-        android:layout_gravity="bottom|start"
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/colorPrimaryDark"
-        app:menu="@menu/bottom_navigation_items"
-        app:itemIconTint="@drawable/bottom_nav_item_color"
-        app:itemTextColor="@drawable/bottom_nav_item_color"
-        android:elevation="4dp"/>
+        android:layout_height="match_parent" />
 
-</FrameLayout>
+</LinearLayout>

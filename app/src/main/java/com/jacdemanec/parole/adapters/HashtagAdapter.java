@@ -23,6 +23,7 @@ public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdap
 
     HashtagOnClickListener hashtagOnClickListener;
     private String mUsername;
+    private RecyclerView recyclerView;
 
     /**
      * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
@@ -30,15 +31,22 @@ public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdap
      *
      * @param options
      */
-    public HashtagAdapter(@NonNull FirebaseRecyclerOptions<Hashtag> options, HashtagOnClickListener hashtagOnClickListener, String mUsername) {
+    public HashtagAdapter(@NonNull FirebaseRecyclerOptions<Hashtag> options, HashtagOnClickListener hashtagOnClickListener, String mUsername, RecyclerView recyclerView) {
         super(options);
         this.hashtagOnClickListener = hashtagOnClickListener;
         this.mUsername = mUsername;
+        this.recyclerView = recyclerView;
     }
 
     public void updateUser(String username){
         mUsername = username;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        recyclerView.smoothScrollToPosition(getItemCount());
     }
 
     public interface HashtagOnClickListener {
