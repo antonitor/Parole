@@ -13,5 +13,7 @@
     <string name="search">Search</string>
     <string name="cd_pick_an_emoji">Pick an emoji</string>
     <string name="extra_image">extra_photo_image</string>
-
+    <string name="args_top_rated">top_rated</string>
+    <string name="args_last_added">last_added</string>
+    <string name="args_favorites">favorites</string>
 </resources>

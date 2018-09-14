@@ -37,9 +37,6 @@ public class MainActivity extends AppCompatActivity implements AddHashtagDialogF
     private static final int RC_SIGN_IN = 1;
 
     private HashtagViewModel mViewModel;
-    private FragmentPagerAdapter fragmentPagerAdapter;
-    private ViewPager viewPager;
-
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -51,9 +48,9 @@ public class MainActivity extends AppCompatActivity implements AddHashtagDialogF
 
         mViewModel = ViewModelProviders.of(this).get(HashtagViewModel.class);
 
-        viewPager = findViewById(R.id.pager);
-        fragmentPagerAdapter = new MainPageAdapter(getSupportFragmentManager());
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        ViewPager viewPager = findViewById(R.id.pager);
+        FragmentPagerAdapter fragmentPagerAdapter = new MainPageAdapter(getSupportFragmentManager(), this);
+        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         viewPager.setAdapter(fragmentPagerAdapter);

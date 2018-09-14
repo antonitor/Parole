@@ -1,6 +1,5 @@
 package com.jacdemanec.parole;
 
-
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import android.widget.ProgressBar;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.jacdemanec.parole.adapters.HashtagAdapter;
 import com.jacdemanec.parole.model.Hashtag;
 import com.jacdemanec.parole.viewmodel.HashtagViewModel;
@@ -29,6 +29,9 @@ import java.util.HashMap;
  */
 public class HashtagFragment extends Fragment implements HashtagAdapter.HashtagOnClickListener {
 
+    private static final String ARG_PARAM1 = "param1";
+    private String mParam;
+
     private RecyclerView mHashtagRecyclerView;
     private FirebaseRecyclerAdapter mHashtagAdapter;
     private ProgressBar mProgressBar;
@@ -38,6 +41,22 @@ public class HashtagFragment extends Fragment implements HashtagAdapter.HashtagO
 
     public HashtagFragment() {
         // Required empty public constructor
+    }
+
+    public static HashtagFragment newInstance(String param) {
+        HashtagFragment hashtagFragment = new HashtagFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param);
+        hashtagFragment.setArguments(args);
+        return hashtagFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam = getArguments().getString(ARG_PARAM1);
+        }
     }
 
 
@@ -53,32 +72,36 @@ public class HashtagFragment extends Fragment implements HashtagAdapter.HashtagO
         mProgressBar.setVisibility(View.INVISIBLE);
         mHashtagRecyclerView = view.findViewById(R.id.hashtag_recyclerview);
         mFab = view.findViewById(R.id.fab);
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment dialogFragment = new AddHashtagDialogFragment();
-                dialogFragment.show(getActivity().getSupportFragmentManager(), "AddHashtagDialogFragment");
-            }
-        });
+        if(mParam.equals(getString(R.string.args_top_rated))) {
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogFragment dialogFragment = new AddHashtagDialogFragment();
+                    dialogFragment.show(getActivity().getSupportFragmentManager(), "AddHashtagDialogFragment");
+                }
+            });
+        } else {
+            mFab.setVisibility(View.INVISIBLE);
+        }
 
         initializeRecyclerView();
         return view;
     }
 
     private void initializeRecyclerView() {
-        FirebaseRecyclerOptions<Hashtag> options =
-                new FirebaseRecyclerOptions.Builder<Hashtag>()
-                        .setQuery(mViewModel.getmHashtagQuery(), Hashtag.class)
-                        .build();
-
-        /* FAVORITES QUERY!!!!!!!!
-        Query query = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("favorites/"+mUsername).equalTo(true);
+        Query query = null;
+        if (mParam.equals(getString(R.string.args_top_rated))) {
+            query = mViewModel.getmTopRatedgQuery();
+        } else if (mParam.equals(getString(R.string.args_last_added))) {
+            query = mViewModel.getmLastAddedQuery();
+        } else if (mParam.equals(getString(R.string.args_favorites))){
+            query = mViewModel.getmFavorityQuery();
+        }
         FirebaseRecyclerOptions<Hashtag> options =
                 new FirebaseRecyclerOptions.Builder<Hashtag>()
                         .setQuery(query, Hashtag.class)
                         .build();
-        */
+
         mHashtagAdapter = new HashtagAdapter(options, this, mViewModel.getmUsername(), mHashtagRecyclerView);
         mHashtagRecyclerView.setAdapter(mHashtagAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());

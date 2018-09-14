@@ -13,14 +13,16 @@ public class HashtagViewModel extends ViewModel {
     private String mUsername;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mHashtagDbReference;
-    private Query mHashtagQuery;
+    private Query mTopRatedgQuery;
+    private Query mLastAddedQuery;
     private Query mFavorityQuery;
 
     public HashtagViewModel(){
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mHashtagDbReference = mFirebaseDatabase.getReference().child("hashtags");
-        mHashtagQuery = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("timestamp");
+        mLastAddedQuery = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("timestamp");
         mFavorityQuery = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("favorites/"+mUsername).equalTo(true);
+        mTopRatedgQuery = mFirebaseDatabase.getReference().child("/hashtags").orderByChild("likes_count");
     }
 
     public String getmUsername() {
@@ -39,11 +41,15 @@ public class HashtagViewModel extends ViewModel {
         return mHashtagDbReference;
     }
 
-    public Query getmHashtagQuery() {
-        return mHashtagQuery;
-    }
-
     public Query getmFavorityQuery() {
         return mFavorityQuery;
+    }
+
+    public Query getmTopRatedgQuery() {
+        return mTopRatedgQuery;
+    }
+
+    public Query getmLastAddedQuery() {
+        return mLastAddedQuery;
     }
 }
