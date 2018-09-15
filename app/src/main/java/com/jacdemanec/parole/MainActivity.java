@@ -61,9 +61,10 @@ public class MainActivity extends AppCompatActivity implements AddHashtagDialogF
                     startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
+                                    .setLogo(R.mipmap.ic_launcher)
+                                    .setTheme(R.style.LoginTheme)
                                     .setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.EmailBuilder().build(),
-                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                            new AuthUI.IdpConfig.EmailBuilder().build(), new AuthUI.IdpConfig.GoogleBuilder().build()))
                                     .build(),
                             RC_SIGN_IN);
                 }
@@ -114,8 +115,8 @@ public class MainActivity extends AppCompatActivity implements AddHashtagDialogF
         startFragmentPageAdapter();
     }
 
-    private void onSingedOutCleanup() {
-        mViewModel.setmUsername(ANONYMOUS);
+    private void onSingedOutCleanup()    {
+        mViewModel.setFirebaseUser(null);
     }
 
     @Override

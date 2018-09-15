@@ -13,7 +13,6 @@ import com.jacdemanec.parole.model.Hashtag;
 public class HashtagViewModel extends ViewModel {
 
     private final static String ANONIMUS = "anonimus";
-    private String mUsername;
     private FirebaseUser firebaseUser;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mHashtagDbReference;
@@ -35,10 +34,6 @@ public class HashtagViewModel extends ViewModel {
             Log.d("VIEW MODEL", ANONIMUS);
             return ANONIMUS;
         }
-    }
-
-    public void setmUsername(String mUsername) {
-        this.mUsername = mUsername;
     }
 
     public FirebaseDatabase getmFirebaseDatabase() {
