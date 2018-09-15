@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 
-public class MainActivity extends AppCompatActivity implements AddHashtagDialogFragment.AddHasthagListener{
+public class MainActivity extends AppCompatActivity implements AddHashtagDialogFragment.AddHasthagListener {
 
     private static final String TAG = "MainActivity";
 
@@ -48,12 +48,6 @@ public class MainActivity extends AppCompatActivity implements AddHashtagDialogF
 
         mViewModel = ViewModelProviders.of(this).get(HashtagViewModel.class);
 
-        ViewPager viewPager = findViewById(R.id.pager);
-        FragmentPagerAdapter fragmentPagerAdapter = new MainPageAdapter(getSupportFragmentManager(), this);
-        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        viewPager.setAdapter(fragmentPagerAdapter);
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -61,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AddHashtagDialogF
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    onSingedInInitialize(user.getDisplayName());
+                    onSingedInInitialize(user);
                 } else {
                     onSingedOutCleanup();
                     startActivityForResult(
@@ -76,6 +70,14 @@ public class MainActivity extends AppCompatActivity implements AddHashtagDialogF
             }
         };
 
+    }
+
+    private void startFragmentPageAdapter() {
+        ViewPager viewPager = findViewById(R.id.pager);
+        FragmentPagerAdapter fragmentPagerAdapter = new MainPageAdapter(getSupportFragmentManager(), this);
+        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setAdapter(fragmentPagerAdapter);
     }
 
 
@@ -107,8 +109,9 @@ public class MainActivity extends AppCompatActivity implements AddHashtagDialogF
         return true;
     }
 
-    private void onSingedInInitialize(String username) {
-        mViewModel.setmUsername(username);
+    private void onSingedInInitialize(FirebaseUser user) {
+        mViewModel.setFirebaseUser(user);
+        startFragmentPageAdapter();
     }
 
     private void onSingedOutCleanup() {
