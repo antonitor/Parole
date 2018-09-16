@@ -17,8 +17,6 @@ package com.jacdemanec.parole.model;
 
 import com.google.firebase.database.ServerValue;
 
-import java.util.Date;
-
 public class ChatMessage {
 
     private String text;

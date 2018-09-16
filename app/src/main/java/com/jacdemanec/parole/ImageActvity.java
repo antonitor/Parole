@@ -6,15 +6,19 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ImageActvity extends AppCompatActivity {
 
+    @BindView(R.id.image_container)
     ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_actvity);
-        imageView = findViewById(R.id.image_container);
+        ButterKnife.bind(this);
         String photoUrl = getIntent().getStringExtra(getString(R.string.extra_image));
         Glide.with(this)
                 .load(photoUrl)

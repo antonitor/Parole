@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +20,8 @@ import com.jacdemanec.parole.adapters.HashtagAdapter;
 import com.jacdemanec.parole.model.Hashtag;
 import com.jacdemanec.parole.viewmodel.HashtagViewModel;
 
-import java.util.HashMap;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -32,11 +32,15 @@ public class HashtagFragment extends Fragment implements HashtagAdapter.HashtagO
     private static final String ARG_PARAM1 = "param1";
     private String mParam;
 
+    @BindView(R.id.hashtag_recyclerview)
     private RecyclerView mHashtagRecyclerView;
-    private FirebaseRecyclerAdapter mHashtagAdapter;
+    @BindView(R.id.hashtag_progressbar)
     private ProgressBar mProgressBar;
+    @BindView(R.id.progressBar)
     private FloatingActionButton mFab;
 
+
+    private FirebaseRecyclerAdapter mHashtagAdapter;
     private HashtagViewModel mViewModel;
 
     public HashtagFragment() {
@@ -65,21 +69,12 @@ public class HashtagFragment extends Fragment implements HashtagAdapter.HashtagO
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_hashtag, container, false);
-
+        ButterKnife.bind(this, view);
         mViewModel = ViewModelProviders.of(getActivity()).get(HashtagViewModel.class);
         // Initialize references to views
-        mProgressBar = view.findViewById(R.id.hashtag_progressbar);
         mProgressBar.setVisibility(View.INVISIBLE);
-        mHashtagRecyclerView = view.findViewById(R.id.hashtag_recyclerview);
         mFab = view.findViewById(R.id.fab);
         if(mParam.equals(getString(R.string.args_top_rated))) {
-            /*mFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DialogFragment dialogFragment = new AddHashtagDialogFragment();
-                    dialogFragment.show(getActivity().getSupportFragmentManager(), "AddHashtagDialogFragment");
-                }
-            });*/
             mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

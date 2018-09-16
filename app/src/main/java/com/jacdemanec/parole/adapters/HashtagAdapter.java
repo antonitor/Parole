@@ -1,6 +1,5 @@
 package com.jacdemanec.parole.adapters;
 
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,12 +11,11 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.FirebaseDatabase;
 import com.jacdemanec.parole.model.Hashtag;
 import com.jacdemanec.parole.R;
 
 import java.util.Date;
-import java.util.HashMap;
+
 
 public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdapter.HashtagHolder> {
 

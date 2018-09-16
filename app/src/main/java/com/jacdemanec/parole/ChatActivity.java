@@ -34,6 +34,9 @@ import com.vanniktech.emoji.EmojiPopup;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
@@ -43,17 +46,23 @@ public class ChatActivity extends AppCompatActivity {
     private static final int RC_PHOTO_PICKER = 2;
     private static final int RC_CAMERA_ACTION = 3;
 
+    @BindView(R.id.messageListView)
     private RecyclerView mMessageRecyclerView;
-    private FirebaseRecyclerAdapter mMessageAdapter;
+    @BindView(R.id.progressBar)
     private ProgressBar mProgressBar;
+    @BindView(R.id.photoPickerButton)
     private ImageButton mPhotoPickerButton;
+    @BindView(R.id.messageEditText)
     private EmojiEditText mMessageEditText;
+    @BindView(R.id.sendButton)
     private ImageButton mSendButton;
-    private EmojiPopup mEmojiPopup;
+    @BindView(R.id.emoji_picker)
     private ImageButton mEmojiButton;
 
     private String mUsername;
     private String mHashtag;
+    private EmojiPopup mEmojiPopup;
+    private FirebaseRecyclerAdapter mMessageAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessageDbReference;
@@ -68,6 +77,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         mUsername = intent.getStringExtra("EXTRA_USERNAME");
@@ -80,16 +90,8 @@ public class ChatActivity extends AppCompatActivity {
         mMessageDbReference = mFirebaseDatabase.getReference().child("messages");
         mChatPhotosStorageReference = mFirebaseStorage.getReference("chat_photos");
 
-        // Initialize references to views
-        mProgressBar =  findViewById(R.id.progressBar);
-        mMessageRecyclerView = findViewById(R.id.messageListView);
-        mPhotoPickerButton =  findViewById(R.id.photoPickerButton);
-        mSendButton = findViewById(R.id.sendButton);
-        mEmojiButton = findViewById(R.id.emoji_picker);
         RelativeLayout rootView = findViewById(R.id.root_view);
-        mMessageEditText = findViewById(R.id.messageEditText);
         mEmojiPopup = EmojiPopup.Builder.fromRootView(rootView).build(mMessageEditText);
-
 
         Query query = mFirebaseDatabase.getReference().child("messages").orderByChild("hashtag").equalTo(mHashtag);
         FirebaseRecyclerOptions<ChatMessage> options =

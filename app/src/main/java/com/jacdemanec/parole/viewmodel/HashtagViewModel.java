@@ -3,12 +3,10 @@ package com.jacdemanec.parole.viewmodel;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.jacdemanec.parole.model.Hashtag;
 
 public class HashtagViewModel extends ViewModel {
 

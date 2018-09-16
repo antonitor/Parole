@@ -2,9 +2,7 @@ package com.jacdemanec.parole.model;
 
 import com.google.firebase.database.ServerValue;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class Hashtag {
 
