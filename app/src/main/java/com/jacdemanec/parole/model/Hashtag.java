@@ -17,12 +17,13 @@ public class Hashtag {
     private HashMap<String, Boolean> likes;
     private Object timestamp;
     private HashMap<String, Boolean> favorites;
+    private String imageUrl;
 
 
     public Hashtag() {
     }
 
-    public Hashtag(String title, String text, String owner, HashMap<String, Boolean> likes, int likes_count, HashMap<String, Boolean> favorites,  float lat, float lon) {
+    public Hashtag(String title, String text, String owner, String imageUrl, HashMap<String, Boolean> likes, int likes_count, HashMap<String, Boolean> favorites,  float lat, float lon) {
         this.title = title;
         this.text = text;
         this.owner = owner;
@@ -32,6 +33,7 @@ public class Hashtag {
         this.lon = lon;
         this.timestamp = ServerValue.TIMESTAMP;
         this.favorites = favorites;
+        this.imageUrl = imageUrl;
     }
 
     public String getTitle() {
@@ -104,5 +106,13 @@ public class Hashtag {
 
     public void setFavorites(HashMap<String, Boolean> favorites) {
         this.favorites = favorites;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

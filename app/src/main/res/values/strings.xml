@@ -19,4 +19,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add">ADD</string>
+    <string name="cancel">CANCEL</string>
+    <string name="extra_new_hashtag">extra_new_hashtag</string>
+    <string name="extra_new_hashtag_text">extra_new_hashtag_text</string>
+    <string name="extra_new_image">extra_new_hashtag_image_byte_array</string>
 </resources>

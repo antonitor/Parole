@@ -73,11 +73,18 @@ public class HashtagFragment extends Fragment implements HashtagAdapter.HashtagO
         mHashtagRecyclerView = view.findViewById(R.id.hashtag_recyclerview);
         mFab = view.findViewById(R.id.fab);
         if(mParam.equals(getString(R.string.args_top_rated))) {
-            mFab.setOnClickListener(new View.OnClickListener() {
+            /*mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     DialogFragment dialogFragment = new AddHashtagDialogFragment();
                     dialogFragment.show(getActivity().getSupportFragmentManager(), "AddHashtagDialogFragment");
+                }
+            });*/
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent newHashtagIntent = new Intent(getActivity(), NewHashtagActivity.class);
+                    getActivity().startActivityForResult(newHashtagIntent, MainActivity.RC_NEW_HASHTAG);
                 }
             });
         } else {
