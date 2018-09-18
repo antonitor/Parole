@@ -27,7 +27,7 @@
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcçdefghijklmnñopqrstuvwxyz1234567890"
             android:hint="@string/hint_hashtag"
             android:inputType="textFilter"
-            android:maxLength="19"
+            android:maxLength="36"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </android.support.design.widget.TextInputLayout>

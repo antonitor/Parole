@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -71,6 +73,7 @@ public class NewHashtagActivity extends AppCompatActivity {
         mHashtagImageStorageReference = mFirebaseStorage.getReference("hashtag_images");
 
         ButterKnife.bind(this);
+        mNewHashtagEditText.setText("#");
         mNewHashtagEditText.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -118,29 +121,34 @@ public class NewHashtagActivity extends AppCompatActivity {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Intent data = new Intent();
-                final String hashtag = mNewHashtagEditText.getText().toString().substring(1);
-                final String text = mNewHastagTextEditText.getText().toString();
-                if (mViewModel.isImageSelected()) {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    Observer<String> imageUrlObserver = new Observer<String>() {
-                        @Override
-                        public void onChanged(@Nullable String s) {
-                            data.putExtra(getString(R.string.extra_new_image), s);
-                            data.putExtra(getString(R.string.extra_new_hashtag), hashtag);
-                            data.putExtra(getString(R.string.extra_new_hashtag_text), text);
-                            setResult(RESULT_OK, data);
-                            mProgressBar.setVisibility(View.INVISIBLE);
-                            finish();
-                        }
-                    };
-                    mViewModel.getImageUrl().observe(NewHashtagActivity.this, imageUrlObserver);
-                    storeImage();
+                if (!mNewHashtagEditText.getText().toString().trim().equals("#") && !mNewHastagTextEditText.getText().toString().trim().equals("")) {
+                    Log.d(NewHashtagActivity.class.getSimpleName(), "NO ESTAN VACIOS LOS CAMPOS DE TEXTO SEGúN ESTO");
+                    final Intent data = new Intent();
+                    final String hashtag = mNewHashtagEditText.getText().toString().substring(1);
+                    final String text = mNewHastagTextEditText.getText().toString();
+                    if (mViewModel.isImageSelected()) {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        Observer<String> imageUrlObserver = new Observer<String>() {
+                            @Override
+                            public void onChanged(@Nullable String s) {
+                                data.putExtra(getString(R.string.extra_new_image), s);
+                                data.putExtra(getString(R.string.extra_new_hashtag), hashtag);
+                                data.putExtra(getString(R.string.extra_new_hashtag_text), text);
+                                setResult(RESULT_OK, data);
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                                finish();
+                            }
+                        };
+                        mViewModel.getImageUrl().observe(NewHashtagActivity.this, imageUrlObserver);
+                        storeImage();
+                    } else {
+                        data.putExtra(getString(R.string.extra_new_hashtag), hashtag);
+                        data.putExtra(getString(R.string.extra_new_hashtag_text), text);
+                        setResult(RESULT_OK, data);
+                        finish();
+                    }
                 } else {
-                    data.putExtra(getString(R.string.extra_new_hashtag), hashtag);
-                    data.putExtra(getString(R.string.extra_new_hashtag_text), text);
-                    setResult(RESULT_OK, data);
-                    finish();
+                    Toast.makeText(NewHashtagActivity.this, "Imprescindible añadir un #Hashtag y una descripcion!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

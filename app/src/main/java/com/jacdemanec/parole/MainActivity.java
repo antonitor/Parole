@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                                     .setLogo(R.mipmap.ic_launcher)
                                     .setTheme(R.style.LoginTheme)
                                     .setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.EmailBuilder().build(), new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                            new AuthUI.IdpConfig.EmailBuilder().build()))
                                     .build(),
                             RC_SIGN_IN);
                 }
@@ -92,19 +92,21 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case RC_NEW_HASHTAG:
-                String hashtag = data.getStringExtra(getString(R.string.extra_new_hashtag));
-                String text = data.getStringExtra(getString(R.string.extra_new_hashtag_text));
-                String imageUrl = null;
-                if (data.hasExtra(getString(R.string.extra_new_image))) {
-                    imageUrl = data.getStringExtra(getString(R.string.extra_new_image));
+                if (resultCode == RESULT_OK) {
+                    String hashtag = data.getStringExtra(getString(R.string.extra_new_hashtag));
+                    String text = data.getStringExtra(getString(R.string.extra_new_hashtag_text));
+                    String imageUrl = null;
+                    if (data.hasExtra(getString(R.string.extra_new_image))) {
+                        imageUrl = data.getStringExtra(getString(R.string.extra_new_image));
+                    }
+                    HashMap<String, Boolean> emptyLikesMap = new HashMap<>();
+                    HashMap<String, Boolean> emptyFavoritesMap = new HashMap<>();
+
+                    Hashtag hashtagInstance = new Hashtag(hashtag, text, "@" + mViewModel.getmUsername(),
+                            imageUrl, emptyLikesMap, 0, emptyFavoritesMap, 0, 0);
+
+                    mViewModel.getmHashtagDbReference().child(hashtag).setValue(hashtagInstance);
                 }
-                HashMap<String, Boolean> emptyLikesMap = new HashMap<>();
-                HashMap<String, Boolean> emptyFavoritesMap = new HashMap<>();
-
-                Hashtag hashtagInstance = new Hashtag(hashtag, text, "@" + mViewModel.getmUsername(),
-                        imageUrl, emptyLikesMap, 0, emptyFavoritesMap, 0, 0);
-
-                mViewModel.getmHashtagDbReference().child(hashtag).setValue(hashtagInstance);
         }
     }
 
