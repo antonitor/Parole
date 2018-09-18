@@ -47,17 +47,17 @@ public class ChatActivity extends AppCompatActivity {
     private static final int RC_CAMERA_ACTION = 3;
 
     @BindView(R.id.messageListView)
-    private RecyclerView mMessageRecyclerView;
+    RecyclerView mMessageRecyclerView;
     @BindView(R.id.progressBar)
-    private ProgressBar mProgressBar;
+    ProgressBar mProgressBar;
     @BindView(R.id.photoPickerButton)
-    private ImageButton mPhotoPickerButton;
+    ImageButton mPhotoPickerButton;
     @BindView(R.id.messageEditText)
-    private EmojiEditText mMessageEditText;
+    EmojiEditText mMessageEditText;
     @BindView(R.id.sendButton)
-    private ImageButton mSendButton;
+    ImageButton mSendButton;
     @BindView(R.id.emoji_picker)
-    private ImageButton mEmojiButton;
+    ImageButton mEmojiButton;
 
     private String mUsername;
     private String mHashtag;

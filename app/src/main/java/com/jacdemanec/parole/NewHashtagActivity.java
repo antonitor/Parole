@@ -199,8 +199,8 @@ public class NewHashtagActivity extends AppCompatActivity {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
                     Glide.with(this)
-                            .load(baos.toByteArray())
                             .asBitmap()
+                            .load(baos.toByteArray())
                             .into(mNewHashtagImageImageView);
                 }
         }

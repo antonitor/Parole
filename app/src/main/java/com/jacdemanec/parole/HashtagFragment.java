@@ -33,11 +33,11 @@ public class HashtagFragment extends Fragment implements HashtagAdapter.HashtagO
     private String mParam;
 
     @BindView(R.id.hashtag_recyclerview)
-    private RecyclerView mHashtagRecyclerView;
+    RecyclerView mHashtagRecyclerView;
     @BindView(R.id.hashtag_progressbar)
-    private ProgressBar mProgressBar;
-    @BindView(R.id.progressBar)
-    private FloatingActionButton mFab;
+    ProgressBar mProgressBar;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
 
 
     private FirebaseRecyclerAdapter mHashtagAdapter;
@@ -144,6 +144,13 @@ public class HashtagFragment extends Fragment implements HashtagAdapter.HashtagO
     public void onUnFavoriteClicked(String hashtag) {
         DatabaseReference likesReference = mViewModel.getmHashtagDbReference().child(hashtag);
         likesReference.child("favorites").child(mViewModel.getmUsername()).removeValue();
+    }
+
+    @Override
+    public void onImageClicked(String imageUrl) {
+        Intent imageIntent = new Intent(getActivity(), ImageActvity.class);
+        imageIntent.putExtra(getString(R.string.extra_image), imageUrl);
+        startActivity(imageIntent);
     }
 }
 

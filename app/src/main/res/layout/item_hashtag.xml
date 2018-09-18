@@ -81,8 +81,8 @@
         app:layout_constraintTop_toBottomOf="@+id/text"
         tools:text="99" />
 
-    <ImageButton
-        android:id="@+id/user_button"
+    <ImageView
+        android:id="@+id/hashtag_image"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_marginStart="8dp"
