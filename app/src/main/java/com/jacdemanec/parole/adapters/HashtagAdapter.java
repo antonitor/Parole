@@ -1,7 +1,7 @@
 package com.jacdemanec.parole.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdapter.HashtagHolder> {
 
-    HashtagOnClickListener hashtagOnClickListener;
+    private HashtagOnClickListener hashtagOnClickListener;
     private String mUsername;
     private RecyclerView recyclerView;
 
@@ -54,15 +54,15 @@ public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdap
     }
 
     public interface HashtagOnClickListener {
-        public void onHashtagClicked(String hashtag);
+        void onHashtagClicked(String hashtag);
 
-        public void onLikeClicked(String hashtag);
+        void onLikeClicked(String hashtag);
 
-        public void onFavoriteClicked(String hashtag);
+        void onFavoriteClicked(String hashtag);
 
-        public void onUnFavoriteClicked(String hashtag);
+        void onUnFavoriteClicked(String hashtag);
 
-        public void onImageClicked(String imageUrl);
+        void onImageClicked(String imageUrl);
     }
 
     @Override
@@ -78,12 +78,7 @@ public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdap
             holder.likesTextView.setText("0");
         }
         holder.userTextView.setText(model.getOwner());
-        holder.thumbUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hashtagOnClickListener.onLikeClicked(model.getTitle());
-            }
-        });
+        holder.thumbUpButton.setOnClickListener(view -> hashtagOnClickListener.onLikeClicked(model.getTitle()));
         Date date = new Date(Long.parseLong(model.getTimestamp().toString()));
         Log.d("TIMESTAMP", date.toString());
 
@@ -98,12 +93,9 @@ public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdap
         if (model.getFavorites() != null && mUsername !=null) {
             if (model.getFavorites().containsKey(mUsername)) {
                 holder.favButton.setImageResource(R.drawable.ic_favorite_black_24dp);
-                holder.favButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        hashtagOnClickListener.onUnFavoriteClicked(model.getTitle());
-                        holder.favButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                    }
+                holder.favButton.setOnClickListener(view -> {
+                    hashtagOnClickListener.onUnFavoriteClicked(model.getTitle());
+                    holder.favButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                 });
             } else {
                 setFavoriteClicker(holder.favButton, model.getTitle());
@@ -114,30 +106,15 @@ public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdap
     }
 
     private void setFavoriteClicker(ImageButton button, final String hashtag) {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hashtagOnClickListener.onFavoriteClicked(hashtag);
-            }
-        });
+        button.setOnClickListener(view -> hashtagOnClickListener.onFavoriteClicked(hashtag));
     }
 
     private void setHashtagClicked(TextView textView, final String hashtag){
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hashtagOnClickListener.onHashtagClicked(hashtag);
-            }
-        });
+        textView.setOnClickListener(view -> hashtagOnClickListener.onHashtagClicked(hashtag));
     }
 
     private void setImageClicker(ImageView imageView, final String imageUrl){
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hashtagOnClickListener.onImageClicked(imageUrl);
-            }
-        });
+        imageView.setOnClickListener(view -> hashtagOnClickListener.onImageClicked(imageUrl));
     }
 
     @NonNull
@@ -148,7 +125,7 @@ public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdap
         return new HashtagHolder(view);
     }
 
-    class HashtagHolder extends RecyclerView.ViewHolder {
+    static class HashtagHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_hashtag)
         TextView hashtagTextView;
@@ -165,7 +142,7 @@ public class HashtagAdapter extends FirebaseRecyclerAdapter<Hashtag, HashtagAdap
         @BindView(R.id.hashtag_image)
         ImageView imageView;
 
-        public HashtagHolder(View itemView) {
+        HashtagHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

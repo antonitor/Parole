@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewHashtagActivity">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,10 +29,11 @@
             android:inputType="textFilter"
             android:maxLength="36"
             android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:autofillHints="@string/hint_hashtag"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,8 +54,9 @@
             android:inputType="text"
             android:lines="2"
             android:maxLength="90"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:autofillHints="@string/hint_description"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/add_button"
@@ -88,7 +90,8 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-        app:srcCompat="@drawable/ic_insert_photo_white" />
+        app:srcCompat="@drawable/ic_insert_photo_grey_24dp"
+        android:contentDescription="@string/cd_add_picture_button"/>
 
     <ImageButton
         android:id="@+id/take_picture_button"
@@ -97,7 +100,8 @@
         android:layout_marginStart="11dp"
         app:layout_constraintStart_toEndOf="@+id/add_picture_button"
         app:layout_constraintTop_toTopOf="@+id/add_picture_button"
-        app:srcCompat="@drawable/ic_camera_grey_24dp" />
+        app:srcCompat="@drawable/ic_camera_grey_24dp"
+        android:contentDescription="@string/cd_take_picture_button"/>
 
     <ImageView
         android:id="@+id/new_hashtag_iv"
@@ -111,7 +115,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/take_picture_button"
-        app:srcCompat="@color/fui_transparent" />
+        app:srcCompat="@color/fui_transparent"
+        android:contentDescription="@string/cd_image_choosen_by_the_user"/>
 
     <ProgressBar
         android:id="@+id/new_hashtag_pb"
@@ -124,4 +129,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

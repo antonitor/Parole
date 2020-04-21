@@ -1,17 +1,19 @@
 package com.jacdemanec.parole.adapters;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.jacdemanec.parole.HashtagFragment;
 import com.jacdemanec.parole.R;
 
 public class MainPageAdapter extends FragmentPagerAdapter {
 
-    private static int NUM_ITEMS = 3;
-    private String tabTitles[] = new String[]{"Top Rated", "Last Added", "Favorites"};
+    private static final int NUM_ITEMS = 3;
+    private String[] tabTitles = new String[]{"Top Rated", "Last Added", "Favorites"};
     private Context mContext;
 
     public MainPageAdapter(FragmentManager fm, Context context) {
@@ -19,6 +21,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
         this.mContext = context;
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         switch (position) {

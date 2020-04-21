@@ -24,4 +24,8 @@
     <string name="extra_new_hashtag">extra_new_hashtag</string>
     <string name="extra_new_hashtag_text">extra_new_hashtag_text</string>
     <string name="extra_new_image">extra_new_hashtag_image_byte_array</string>
+    <string name="cd_send_button">Send button</string>
+    <string name="cd_add_picture_button">Add Picture Button</string>
+    <string name="cd_take_picture_button">Take Picture Button</string>
+    <string name="cd_image_choosen_by_the_user">Image Choosen By The User</string>
 </resources>

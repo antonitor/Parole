@@ -7,7 +7,7 @@
     android:padding="12dp"
     android:elevation="24dp">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <EditText
@@ -22,10 +22,11 @@
         android:maxLength="19"
         android:maxLines="1"
         android:hint="@string/hint_hashtag"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:autofillHints="@string/hint_hashtag"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <EditText
@@ -39,7 +40,8 @@
         android:hint="@string/hint_description"
         android:lines="2"
         android:maxLength="90"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:autofillHints="@string/hint_description"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

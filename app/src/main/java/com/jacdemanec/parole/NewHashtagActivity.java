@@ -1,13 +1,13 @@
 package com.jacdemanec.parole;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -88,68 +87,54 @@ public class NewHashtagActivity extends AppCompatActivity {
                 }
             }
         });
-        mAddPictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                getIntent.setType("image/*");
+        mAddPictureButton.setOnClickListener(view -> {
+            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            getIntent.setType("image/*");
 
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/*");
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickIntent.setType("image/*");
 
-                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+            Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
-                startActivityForResult(chooserIntent, RC_PHOTO_PICKER);
+            startActivityForResult(chooserIntent, RC_PHOTO_PICKER);
+        });
+        mTakePictureButton.setOnClickListener(view -> {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, RC_CAMERA_ACTION);
             }
         });
-        mTakePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, RC_CAMERA_ACTION);
-                }
-            }
-        });
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mNewHashtagEditText.getText().toString().trim().equals("#") && !mNewHastagTextEditText.getText().toString().trim().equals("")) {
-                    Log.d(NewHashtagActivity.class.getSimpleName(), "NO ESTAN VACIOS LOS CAMPOS DE TEXTO SEGúN ESTO");
-                    final Intent data = new Intent();
-                    final String hashtag = mNewHashtagEditText.getText().toString().substring(1);
-                    final String text = mNewHastagTextEditText.getText().toString();
-                    if (mViewModel.isImageSelected()) {
-                        mProgressBar.setVisibility(View.VISIBLE);
-                        Observer<String> imageUrlObserver = new Observer<String>() {
-                            @Override
-                            public void onChanged(@Nullable String s) {
-                                data.putExtra(getString(R.string.extra_new_image), s);
-                                data.putExtra(getString(R.string.extra_new_hashtag), hashtag);
-                                data.putExtra(getString(R.string.extra_new_hashtag_text), text);
-                                setResult(RESULT_OK, data);
-                                mProgressBar.setVisibility(View.INVISIBLE);
-                                finish();
-                            }
-                        };
-                        mViewModel.getImageUrl().observe(NewHashtagActivity.this, imageUrlObserver);
-                        storeImage();
-                    } else {
-                        data.putExtra(getString(R.string.extra_new_hashtag), hashtag);
-                        data.putExtra(getString(R.string.extra_new_hashtag_text), text);
-                        setResult(RESULT_OK, data);
-                        finish();
-                    }
+        mCancelButton.setOnClickListener(view -> finish());
+        mAddButton.setOnClickListener(view -> {
+            if (!mNewHashtagEditText.getText().toString().trim().equals("#") && !mNewHastagTextEditText.getText().toString().trim().equals("")) {
+                Log.d(NewHashtagActivity.class.getSimpleName(), "NO ESTAN VACIOS LOS CAMPOS DE TEXTO SEGúN ESTO");
+                final Intent data = new Intent();
+                final String hashtag = mNewHashtagEditText.getText().toString().substring(1);
+                final String text = mNewHastagTextEditText.getText().toString();
+                if (mViewModel.isImageSelected()) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    Observer<String> imageUrlObserver = new Observer<String>() {
+                        @Override
+                        public void onChanged(@Nullable String s) {
+                            data.putExtra(getString(R.string.extra_new_image), s);
+                            data.putExtra(getString(R.string.extra_new_hashtag), hashtag);
+                            data.putExtra(getString(R.string.extra_new_hashtag_text), text);
+                            setResult(RESULT_OK, data);
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            finish();
+                        }
+                    };
+                    mViewModel.getImageUrl().observe(NewHashtagActivity.this, imageUrlObserver);
+                    storeImage();
                 } else {
-                    Toast.makeText(NewHashtagActivity.this, "Imprescindible añadir un #Hashtag y una descripcion!", Toast.LENGTH_SHORT).show();
+                    data.putExtra(getString(R.string.extra_new_hashtag), hashtag);
+                    data.putExtra(getString(R.string.extra_new_hashtag_text), text);
+                    setResult(RESULT_OK, data);
+                    finish();
                 }
+            } else {
+                Toast.makeText(NewHashtagActivity.this, "Imprescindible añadir un #Hashtag y una descripcion!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -161,25 +146,19 @@ public class NewHashtagActivity extends AppCompatActivity {
             final String randomImageName = "image-" + (new Date().getTime());
             final StorageReference photoRef = mHashtagImageStorageReference.child(randomImageName + ".jpg");
             UploadTask uploadTask = photoRef.putBytes(baos.toByteArray());
-            uploadTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> urlTask = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                    while (!urlTask.isSuccessful()) ;
-                    Uri downloadUrl = urlTask.getResult();
-                    mViewModel.setImageUrl(downloadUrl.toString());
-                }
+            uploadTask.addOnSuccessListener(this, taskSnapshot -> {
+                Task<Uri> urlTask = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                while (!urlTask.isSuccessful()) ;
+                Uri downloadUrl = urlTask.getResult();
+                mViewModel.setImageUrl(downloadUrl.toString());
             });
         } else {
             StorageReference photoRef = mHashtagImageStorageReference.child(mViewModel.getUri().getLastPathSegment());
-            photoRef.putFile(mViewModel.getUri()).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> urlTask = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                    while (!urlTask.isSuccessful()) ;
-                    Uri downloadUrl = urlTask.getResult();
-                    mViewModel.setImageUrl(downloadUrl.toString());
-                }
+            photoRef.putFile(mViewModel.getUri()).addOnSuccessListener(this, taskSnapshot -> {
+                Task<Uri> urlTask = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                while (!urlTask.isSuccessful()) ;
+                Uri downloadUrl = urlTask.getResult();
+                mViewModel.setImageUrl(downloadUrl.toString());
             });
         }
     }

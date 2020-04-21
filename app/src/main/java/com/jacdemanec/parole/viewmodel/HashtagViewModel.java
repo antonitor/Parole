@@ -1,6 +1,6 @@
 package com.jacdemanec.parole.viewmodel;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
